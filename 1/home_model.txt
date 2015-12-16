@@ -1,0 +1,58 @@
+<?php
+
+class home_model extends CI_Model{
+
+	function add_data($data)
+	{	
+		$in_data = array(
+			'p_name' => $data['p_name'],
+			'p_price' => $data['p_price'],
+			'date' => $data['p_date'],
+			'des' => $data['p_des'],
+			'status' => $data['p_status'],
+			);
+		$this->db->insert('admin', $in_data);
+	}
+
+	function data_fetch()
+	{
+		$query = $this->db->get('admin');
+		return $query->result();
+		
+	}
+
+	function get_single_product($id)
+	{
+		$query = $this->db->get_where('admin',array('id'=>$id));
+		return $query->row();
+	}
+
+
+	function image_cart($idd)
+	{
+		$this->db->where_in('id',$idd);
+		$query = $this->db->get('admin');
+		return $query->result();
+		
+	}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

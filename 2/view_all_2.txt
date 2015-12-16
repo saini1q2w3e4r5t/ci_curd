@@ -1,0 +1,31 @@
+<html>
+<head>
+</head>
+<body>
+		<table align="center" border="1">
+			<tbody>
+				<tr><h1 align="center">Product Registration Form</h1></tr>
+				<tr>
+					<td>Product Name</td>
+					<td>Product price</td>
+					<td>Date</td>
+					<td>Des</td>
+					<td>Status</td>
+					<td>Action</td>
+				</tr>
+				<?php 
+				foreach($data as $val)
+				{?>
+				<tr>
+					<td><?php echo $val->p_name; ?></td>
+					<td><?php echo $val->p_price; ?></td>
+					<td><img style="width:150px; height:150px;"src="<?php echo base_url('uploads/'.$val->date);?>"></td>
+					<td><?php echo $val->des; ?></td>
+					<td><?php echo $val->status; ?></td>
+					<td><a href="<?php echo base_url('home/edit/'.$val->id);?>">Edit</a> | <a href="<?php echo base_url('home/addtocart/'.$val->id);?>">Add</a></td>
+				</tr>
+			<?php } ?>
+			</tbody>
+		</table>
+</body>
+</html>

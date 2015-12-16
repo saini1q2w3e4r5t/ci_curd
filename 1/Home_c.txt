@@ -1,0 +1,95 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class home extends CI_Controller {
+
+public function __construct()
+{
+	parent::__construct();
+	$this->load->helper('form');
+	$this->load->model('home_model');
+}
+
+public function index()
+{
+	
+	$this->load->view('hts/form');
+}
+
+private function do_upload()
+	{
+		$config['upload_path'] = './uploads/';
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']	= '1000';
+		$config['max_width']  = '1024';
+		$config['max_height']  = '768';
+
+		$this->load->library('upload', $config);
+
+		if ( ! $this->upload->do_upload('p_date'))
+		{
+			$error = array('error' => $this->upload->display_errors());
+			return '';
+			//print_r($error);
+			//$this->load->view('upload_form', $error);
+
+		}
+		else
+		{
+			$data = $this->upload->data();
+
+			//$this->load->view('upload_success', $data);
+			return $data['file_name'];
+		}
+	}
+
+public function add()
+{
+	$data=$this->input->post();
+	$data['p_date'] = $this->do_upload();
+	$this->home_model->add_data($data);
+	//redirect("home/view_list");
+} 
+
+public function view_list()
+{
+	$this->load->model('home_model');
+	$res = $this->home_model->data_fetch();
+	$this->load->view('hts/view_all',array('data'=>$res));
+}
+
+public function edit($id=0){
+	$this->load->model('home_model');
+	$result = $this->home_model->get_single_product($id);
+	if($this->input->post())
+	{
+		
+	}
+	$this->load->view('hts/edit',array('results'=>$result));
+}
+
+public function addtocart($id)
+{
+
+	$this->load->library('session');
+	$data=$this->session->userdata('cart');
+	if(empty($data))
+	{
+		$data=array();
+	}
+	array_push($data,$id);
+	$this->session->set_userdata('cart',$data);
+	redirect('home/viewcart');
+}
+public function viewcart()
+{
+	$this->load->library('session');
+	$data=$this->session->userdata('cart');
+	$result = $this->home_model->image_cart($data);
+	$this->load->view('hts/view_all',array('data'=>$result));
+
+}
+}
+
+
+
+
